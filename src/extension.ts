@@ -61,9 +61,6 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(`${gameResult} в игре на ${gameHero} длительностью ${gameDuration}. В игре вы совершили ${gameKills} убийств.`);
 	}));
 
-	subscriptions.push(vscode.workspace.onDidChangeConfiguration(updateStatusBarItem));
-	subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateStatusBarItem));
-
 	myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 	myStatusBarItem.tooltip = "Show last dota game info";
 	myStatusBarItem.command = lastGameIdCommand;
@@ -73,6 +70,8 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 async function updateStatusBarItem() {
+	console.log('request');
+
 	if (userId === null) {
 		return;
 	}
@@ -97,4 +96,6 @@ async function updateStatusBarItem() {
 		myStatusBarItem.text = 'Последняя игра в доту была в ' + time;
 		myStatusBarItem.show();
 	}
+
+	setTimeout(updateStatusBarItem, 120000);
 }
