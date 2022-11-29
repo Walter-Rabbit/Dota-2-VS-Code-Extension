@@ -38,7 +38,7 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 		let gameHero = regex.exec(text)![0];
 		regex = new RegExp('>[^<]*<');
 		gameHero = regex.exec(gameHero)![0].replace('<', '');
-		regex = new RegExp('[A-z]+$');
+		regex = new RegExp('[\- \'A-z]+$');
 		gameHero = regex.exec(gameHero)![0];
 
 		regex = new RegExp('<a class=\"[^\"]*\" href=\"\/matches\/[^<]*<\/a>');
