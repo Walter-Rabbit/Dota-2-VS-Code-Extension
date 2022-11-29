@@ -70,8 +70,6 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 async function updateStatusBarItem() {
-	console.log('request');
-
 	if (userId === null) {
 		return;
 	}
