@@ -1,9 +1,11 @@
 # Change Log
 
-All notable changes to the "dota-extension" extension will be documented in this file.
+## Releases
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### 1.0.1
 
-## [Unreleased]
+* Add prompt to entering id dialog.
 
-- Initial release
+### 1.0.0
+
+* Initial release.

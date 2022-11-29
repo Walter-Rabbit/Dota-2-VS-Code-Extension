@@ -8,8 +8,15 @@ let userId = config.get('conf.dota-extension.user-dota-buff-id');
 export async function activate({ subscriptions }: vscode.ExtensionContext) {
 	const myCommandId = 'dota-extension.update-user-id';
 	subscriptions.push(vscode.commands.registerCommand(myCommandId, async () => {
-		//TODO: Чтобы был промт, где написано, что пользователь должен id ввести.
-		userId = await vscode.window.showInputBox();
+		let userInput = await vscode.window.showInputBox({
+			placeHolder: "Dotabuff ID",
+			prompt: "Enter your dotabuff ID" 
+		});
+
+		if (userInput !== null) {
+			userId = userInput;
+		}
+
 		config.update('conf.dota-extension.user-dota-buff-id', userId);
 		await updateStatusBarItem();
 	}));
