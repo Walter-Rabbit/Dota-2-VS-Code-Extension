@@ -6,6 +6,7 @@
   "engines": {
     "vscode": "^1.73.0"
   },
+  "publisher": "Walter-Rabbit",
   "repository": {
     "type": "git",
     "url": "https://github.com/Walter-Rabbit/Dota-2-VS-Code-Extension"
