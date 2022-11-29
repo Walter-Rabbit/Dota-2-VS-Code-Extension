@@ -1,21 +1,28 @@
-# Dota 2 Extension
+# Dota 2 Extension RU
 
-Simple plugin to track time from your last dota 2 game.
+Простой плагин, показывающий информацию по последней игре в доту.
 
-## Features
+## Функции
 
-You can see time from your last game in right end of status bar. To activate plugin you need to enter your dotabuff ID by executing command `"Enter dotabuff user id"` (to call command box press `ctrl + shift + p`). If you want to update dotabuff id, you can execute command again or click on dota extension status bar widget. Also you can change id in vs code configuration.
+Вы можете увидеть время вашей последней игры в Status Bar. А также, кликнув по соответствующему виджету, вы увидете краткую информацию об игре. Чтобы активировать плагин, нужно ввести ваш DotaBuff ID, выполним воманду `"Enter dotabuff user id"` (Чтобы вызвать командную модель нажмите `"ctrl + shift + p"`). Также, вы можете обновить ID, заново выполнив команду.
 
-## Requirements
+## Настройки
 
-Entering your dotabuff ID by executing command `"Enter dotabuff user id"` (to call command box press `ctrl + shift + p`).
+* Dotabuff user ID
 
-## Extension Settings
+## Релизы
 
-* Dotabuff user id
+### 1.0.0
 
-## Release Notes
+* Перевод на русский язык.
+* По нажатию на виджет всплывает краткая информация об игре.
+* В диалоговое окно добавлены значение по умолчанию и название.
+
+### 0.0.2
+
+* Использование глобальной конфигурации, вместо локальной.
+* Добавлена иконка для Marketplace.
 
 ### 0.0.1
 
-Initial release.
+* Первичный релиз.

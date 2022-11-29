@@ -1,8 +1,9 @@
 {
   "name": "dota-extension",
-  "displayName": "Dota 2 Extension",
+  "displayName": "Dota 2 Extension RU",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.73.0"
   },
@@ -23,6 +24,10 @@
       {
         "command": "dota-extension.update-user-id",
         "title": "Enter dotabuff user id"
+      },
+      {
+        "command": "dota-extension.show-last-game",
+        "title": "Show last dota game info"
       }
     ],
     "configuration": [
