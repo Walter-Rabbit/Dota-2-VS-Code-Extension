@@ -3,14 +3,14 @@ import fetch from 'node-fetch';
 
 let myStatusBarItem: vscode.StatusBarItem;
 let config = vscode.workspace.getConfiguration();
-let userId = config.get('conf.dota-extension.user-dota-buff-id');
+let userId = config.get('conf.dota-extension.user-dota-id');
 
 export async function activate({ subscriptions }: vscode.ExtensionContext) {
 	const updateIdCommand = 'dota-extension.update-user-id';
 	subscriptions.push(vscode.commands.registerCommand(updateIdCommand, async () => {
 		let userInput = await vscode.window.showInputBox({
-			placeHolder: "Dotabuff ID",
-			prompt: "Enter your dotabuff ID",
+			placeHolder: "Dota ID",
+			prompt: "Enter your dota ID",
 			value: `${userId}`
 		});
 
@@ -18,47 +18,47 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 			userId = userInput;
 		}
 
-		config.update('conf.dota-extension.user-dota-buff-id', userId, vscode.ConfigurationTarget.Global);
+		config.update('conf.dota-extension.user-dota-id', userId, vscode.ConfigurationTarget.Global);
 		await updateStatusBarItem();
 	}));
 
 	const lastGameIdCommand = 'dota-extension.show-last-game';
 	subscriptions.push(vscode.commands.registerCommand(lastGameIdCommand, async () => {
-		const response = await fetch(`https://ru.dotabuff.com/players/${userId}/matches`, {
-			headers: {
-				'Host': 'ru.dotabuff.com',
-				'Connection': 'keep-alive',
-				'User-Agent': 'PostmanRuntime/7.29.2'
-			}
-		});
+		const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
 		
 		let text = await response.text();
 
-		let regex = new RegExp('<a href=\"\/matches\/[^<]*<\/a>');
-		let gameHero = regex.exec(text)![0];
-		regex = new RegExp('>[^<]*<');
-		gameHero = regex.exec(gameHero)![0].replace('<', '');
-		regex = new RegExp('[\- \'A-z]+$');
-		gameHero = regex.exec(gameHero)![0];
+		let json = JSON.parse(text)[0];
+		
+		let duration = `${get2Numbers(Math.floor(json['duration'] / 60))}:${get2Numbers(json['duration'] % 60)}`;
+		let result = '';
+		if (json['player_slot'] <= 127) {
+			result = json['radiant_win'] ? 'Victory' : 'Defeat';
+		}
+		else {
+			result = !json['radiant_win'] ? 'Victory' : 'Defeat';
+		}
 
-		regex = new RegExp('<a class=\"[^\"]*\" href=\"\/matches\/[^<]*<\/a>');
-		let gameResult = regex.exec(text)![0];
-		regex = new RegExp('>[^<]*<');
-		gameResult = regex.exec(gameResult)![0].replace('<', '');
-		regex = new RegExp('[А-я]+$');
-		gameResult = regex.exec(gameResult)![0];
+		let kills = json['kills'];
+		let deaths = json['deaths'];
+		let assists = json['assists'];
 
-		regex = new RegExp('<td>[^<]+<');
-		let gameDuration = regex.exec(text)![0];
-		regex = new RegExp('>[^<]+<');
-		gameDuration = regex.exec(gameDuration)![0].replace('<', '').replace('>', '');
+		let hero_id = json['hero_id'];
+		const heroes = await fetch(`https://api.opendota.com/api/heroes`);
+		let heroes_text = await heroes.text();
+		let heroes_json = JSON.parse(heroes_text);
+		let hero_name = '';
 
-		regex = new RegExp('<span class\="value">[^<]*<');
-		let gameKills = regex.exec(text)![0];
-		regex = new RegExp('>[^<]+<');
-		gameKills = regex.exec(gameKills)![0].replace('<', '').replace('>', '');
+		for (let i = 0; i <= heroes_json.length; i++) {
+			let hero_json = heroes_json[i];
+			if (hero_json.hasOwnProperty('id') && hero_json['id'] == hero_id) {
+				hero_name = hero_json['localized_name'];
+				break;
+			}
+		}
 
-		vscode.window.showInformationMessage(`${gameResult} в игре на ${gameHero} длительностью ${gameDuration}. В игре вы совершили ${gameKills} убийств.`);
+		vscode.window.showInformationMessage(`${result} in the game on ${hero_name} of duration ${duration}. You got ${kills} kills` +
+		`, died ${deaths} times and ${assists} times assisted.`);
 	}));
 
 	myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -74,26 +74,23 @@ async function updateStatusBarItem() {
 		return;
 	}
 
-	const response = await fetch(`https://ru.dotabuff.com/players/${userId}/matches`, {
-		headers: {
-			'Host': 'ru.dotabuff.com',
-			'Connection': 'keep-alive',
-			'User-Agent': 'PostmanRuntime/7.29.2'
-		}
-	});
-
-	let text = await response.text();
-	let regex = new RegExp('<time datetime=[^<]*>');
-	let timeTags = regex.exec(text);
-
-	if (timeTags !== null) {
-		let timeTag = timeTags[0];
-		regex = new RegExp('title=\"[^"]*\"');
-		let time = regex.exec(timeTag)![0].replace('title\=\"', '').replace(' +0000\"', '');
+	const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
 		
-		myStatusBarItem.text = 'Последняя игра в доту была в ' + time;
-		myStatusBarItem.show();
-	}
+	let text = await response.text();
+
+	let json = JSON.parse(text)[0];
+	let lastGameStartDate = new Date(json['start_time'] * 1000);
+	let lastGameStart = `${get2Numbers(lastGameStartDate.getHours())}:${get2Numbers(lastGameStartDate.getMinutes())} ` +
+	`${get2Numbers(lastGameStartDate.getDay())}.${get2Numbers(lastGameStartDate.getMonth())}.` +
+	`${get2Numbers(lastGameStartDate.getFullYear())}`;
+		
+	myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
+	myStatusBarItem.show();
 
 	setTimeout(updateStatusBarItem, 120000);
+}
+
+function get2Numbers(x: any) {
+	x = String(x);
+	return x.length == 2 ? x : `0` + x;
 }

@@ -1,40 +1,43 @@
-# Dota 2 Extension RU
+# Dota 2 Extension
 
-Простой плагин, показывающий информацию по последней игре в доту.
+Simple plagin to track information about last Dota 2 game.
 
-## Функции
+## Features
 
-Вы можете увидеть время вашей последней игры в Status Bar. А также, кликнув по соответствующему виджету, вы увидете краткую информацию об игре. Чтобы активировать плагин, нужно ввести ваш DotaBuff ID, выполним воманду `"Enter dotabuff user id"` (Чтобы вызвать командную модель нажмите `"ctrl + shift + p"`). Также, вы можете обновить ID, заново выполнив команду.
+You may see date and time of last game in status bar. Also, you can see information from game by clicking on widget at Status Bar. To activate extension, you need to enter your Dota ID by executing command `"Enter dota user id"` (To call command box press `"ctrl + shift + p"`).
 
-## Настройки
+## Settings
 
-* Dotabuff user ID
+* Dota user ID
 
-## Релизы
+## Realeses Notes
+
+### 1.1.0
+
+* Using DotaOpenApi insted of DotaBuff.  
 
 ### 1.0.3
 
-* Убран Debug вывод.
+* Erase debug output
 
 ### 1.0.2
 
-* Теперь плагин не бомбардирует DotaBuff запросами постоянно, а отправляет один запрос в 2 минуты.
+* Stop bombing dotabuff by requests.
 
 ### 1.0.1
 
-* Исправлен баг, когда имя героя некорректно отображается при наличии в имени пробела, дефиса или других символов разделителей.
+* Fix incorrect showing of hero name if it contains space.
 
 ### 1.0.0
 
-* Перевод на русский язык.
-* По нажатию на виджет всплывает краткая информация об игре.
-* В диалоговое окно добавлены значение по умолчанию и название.
+* Information from game by clicking widget.
+* Add prompt to entering ID dialog box.
 
 ### 0.0.2
 
-* Использование глобальной конфигурации, вместо локальной.
-* Добавлена иконка для Marketplace.
+* Using global configuration instead of local.
+* Icon for Marketplace.
 
 ### 0.0.1
 
-* Первичный релиз.
+* Initial release.
