@@ -12,6 +12,11 @@ You may see date and time of last game in status bar. Also, you can see informat
 
 ## Realeses Notes
 
+### 1.1.2
+
+* Fix bug when user can not set his id.
+* Check if user dota id is correct.
+
 ### 1.1.1
 
 * Remove recursive calling status bar update.

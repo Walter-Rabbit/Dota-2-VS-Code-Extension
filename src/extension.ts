@@ -14,7 +14,7 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 			value: `${userId}`
 		});
 
-		if (userInput !== null) {
+		if (userInput !== null && userInput !== undefined) {
 			userId = userInput;
 		}
 
@@ -67,28 +67,35 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(myStatusBarItem);
 
 	while (true) {
-		await updateStatusBarItem();
+		if (userId !== null && userId !== undefined) {
+			await updateStatusBarItem();
+		}
 		setTimeout(() => {}, 120000);
 	}
 }
 
 async function updateStatusBarItem() {
-	if (userId === null) {
-		return;
+	try {
+		if (userId === null) {
+			return;
+		}
+
+		const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
+			
+		let text = await response.text();
+
+		let json = JSON.parse(text)[0];
+		let lastGameStartDate = new Date(json['start_time'] * 1000);
+		let lastGameStart = `${get2Numbers(lastGameStartDate.getHours())}:${get2Numbers(lastGameStartDate.getMinutes())} ` +
+		`${get2Numbers(lastGameStartDate.getDay())}.${get2Numbers(lastGameStartDate.getMonth())}.` +
+		`${get2Numbers(lastGameStartDate.getFullYear())}`;
+			
+		myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
+		myStatusBarItem.show();
 	}
-
-	const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
-		
-	let text = await response.text();
-
-	let json = JSON.parse(text)[0];
-	let lastGameStartDate = new Date(json['start_time'] * 1000);
-	let lastGameStart = `${get2Numbers(lastGameStartDate.getHours())}:${get2Numbers(lastGameStartDate.getMinutes())} ` +
-	`${get2Numbers(lastGameStartDate.getDay())}.${get2Numbers(lastGameStartDate.getMonth())}.` +
-	`${get2Numbers(lastGameStartDate.getFullYear())}`;
-		
-	myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
-	myStatusBarItem.show();
+	catch {
+		vscode.window.showInformationMessage('Dota user ID is incorrect!');
+	}
 }
 
 function get2Numbers(x: any) {

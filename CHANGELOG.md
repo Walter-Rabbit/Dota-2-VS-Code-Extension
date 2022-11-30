@@ -34,3 +34,8 @@
 ### 1.1.1
 
 * Remove recursive calling status bar update.
+
+### 1.1.2
+
+* Fix bug when user can not set his id.
+* Check if user dota id is correct.
