@@ -12,6 +12,10 @@ You may see date and time of last game in status bar. Also, you can see informat
 
 ## Realeses Notes
 
+### 1.1.1
+
+* Remove recursive calling status bar update.
+
 ### 1.1.0
 
 * Using DotaOpenApi insted of DotaBuff.  

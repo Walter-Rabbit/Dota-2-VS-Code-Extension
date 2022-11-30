@@ -29,3 +29,8 @@
 ### 1.1.0
 
 * Using DotaOpenApi insted of DotaBuff.  
+
+
+### 1.1.1
+
+* Remove recursive calling status bar update.

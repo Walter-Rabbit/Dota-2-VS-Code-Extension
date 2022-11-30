@@ -66,7 +66,10 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 	myStatusBarItem.command = lastGameIdCommand;
 	subscriptions.push(myStatusBarItem);
 
-	await updateStatusBarItem();
+	while (true) {
+		await updateStatusBarItem();
+		setTimeout(() => {}, 120000);
+	}
 }
 
 async function updateStatusBarItem() {
@@ -86,8 +89,6 @@ async function updateStatusBarItem() {
 		
 	myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
 	myStatusBarItem.show();
-
-	setTimeout(updateStatusBarItem, 120000);
 }
 
 function get2Numbers(x: any) {
