@@ -12,6 +12,10 @@ You may see date and time of last game in status bar. Also, you can see informat
 
 ## Realeses Notes
 
+### 1.1.3
+
+* Fix bug when new user can not set dota ID.
+
 ### 1.1.2
 
 * Fix bug when user can not set his id.
@@ -41,12 +45,3 @@ You may see date and time of last game in status bar. Also, you can see informat
 
 * Information from game by clicking widget.
 * Add prompt to entering ID dialog box.
-
-### 0.0.2
-
-* Using global configuration instead of local.
-* Icon for Marketplace.
-
-### 0.0.1
-
-* Initial release.

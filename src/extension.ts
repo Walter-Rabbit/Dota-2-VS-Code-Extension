@@ -24,41 +24,46 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	const lastGameIdCommand = 'dota-extension.show-last-game';
 	subscriptions.push(vscode.commands.registerCommand(lastGameIdCommand, async () => {
-		const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
-		
-		let text = await response.text();
+		try {
+			const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
+			
+			let text = await response.text();
 
-		let json = JSON.parse(text)[0];
-		
-		let duration = `${get2Numbers(Math.floor(json['duration'] / 60))}:${get2Numbers(json['duration'] % 60)}`;
-		let result = '';
-		if (json['player_slot'] <= 127) {
-			result = json['radiant_win'] ? 'Victory' : 'Defeat';
-		}
-		else {
-			result = !json['radiant_win'] ? 'Victory' : 'Defeat';
-		}
-
-		let kills = json['kills'];
-		let deaths = json['deaths'];
-		let assists = json['assists'];
-
-		let hero_id = json['hero_id'];
-		const heroes = await fetch(`https://api.opendota.com/api/heroes`);
-		let heroes_text = await heroes.text();
-		let heroes_json = JSON.parse(heroes_text);
-		let hero_name = '';
-
-		for (let i = 0; i <= heroes_json.length; i++) {
-			let hero_json = heroes_json[i];
-			if (hero_json.hasOwnProperty('id') && hero_json['id'] == hero_id) {
-				hero_name = hero_json['localized_name'];
-				break;
+			let json = JSON.parse(text)[0];
+			
+			let duration = `${get2Numbers(Math.floor(json['duration'] / 60))}:${get2Numbers(json['duration'] % 60)}`;
+			let result = '';
+			if (json['player_slot'] <= 127) {
+				result = json['radiant_win'] ? 'Victory' : 'Defeat';
 			}
-		}
+			else {
+				result = !json['radiant_win'] ? 'Victory' : 'Defeat';
+			}
 
-		vscode.window.showInformationMessage(`${result} in the game on ${hero_name} of duration ${duration}. You got ${kills} kills` +
-		`, died ${deaths} times and ${assists} times assisted.`);
+			let kills = json['kills'];
+			let deaths = json['deaths'];
+			let assists = json['assists'];
+
+			let hero_id = json['hero_id'];
+			const heroes = await fetch(`https://api.opendota.com/api/heroes`);
+			let heroes_text = await heroes.text();
+			let heroes_json = JSON.parse(heroes_text);
+			let hero_name = '';
+
+			for (let i = 0; i <= heroes_json.length; i++) {
+				let hero_json = heroes_json[i];
+				if (hero_json.hasOwnProperty('id') && hero_json['id'] == hero_id) {
+					hero_name = hero_json['localized_name'];
+					break;
+				}
+			}
+
+			vscode.window.showInformationMessage(`${result} in the game on ${hero_name} of duration ${duration}. You got ${kills} kills` +
+			`, died ${deaths} times and ${assists} times assisted.`);
+		}
+		catch {
+			vscode.window.showInformationMessage('Dota user ID is incorrect!');
+		}
 	}));
 
 	myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -66,20 +71,12 @@ export async function activate({ subscriptions }: vscode.ExtensionContext) {
 	myStatusBarItem.command = lastGameIdCommand;
 	subscriptions.push(myStatusBarItem);
 
-	while (true) {
-		if (userId !== null && userId !== undefined) {
-			await updateStatusBarItem();
-		}
-		setTimeout(() => {}, 120000);
-	}
+
+	await updateStatusBarItem();
 }
 
 async function updateStatusBarItem() {
 	try {
-		if (userId === null) {
-			return;
-		}
-
 		const response = await fetch(`https://api.opendota.com/api/players/${userId}/recentMatches`);
 			
 		let text = await response.text();
@@ -88,7 +85,7 @@ async function updateStatusBarItem() {
 		let lastGameStartDate = new Date(json['start_time'] * 1000);
 		let lastGameStart = `${get2Numbers(lastGameStartDate.getHours())}:${get2Numbers(lastGameStartDate.getMinutes())} ` +
 		`${get2Numbers(lastGameStartDate.getDay())}.${get2Numbers(lastGameStartDate.getMonth())}.` +
-		`${get2Numbers(lastGameStartDate.getFullYear())}`;
+		`${lastGameStartDate.getFullYear()}`;
 			
 		myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
 		myStatusBarItem.show();
@@ -96,6 +93,8 @@ async function updateStatusBarItem() {
 	catch {
 		vscode.window.showInformationMessage('Dota user ID is incorrect!');
 	}
+
+	setTimeout(updateStatusBarItem, 120000);
 }
 
 function get2Numbers(x: any) {

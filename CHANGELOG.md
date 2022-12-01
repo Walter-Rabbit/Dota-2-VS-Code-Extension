@@ -30,7 +30,6 @@
 
 * Using DotaOpenApi insted of DotaBuff.  
 
-
 ### 1.1.1
 
 * Remove recursive calling status bar update.
@@ -39,3 +38,7 @@
 
 * Fix bug when user can not set his id.
 * Check if user dota id is correct.
+
+### 1.1.3
+
+* Fix bug when new user can not set dota ID.
