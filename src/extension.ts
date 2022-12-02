@@ -84,10 +84,10 @@ async function updateStatusBarItem() {
 		let json = JSON.parse(text)[0];
 		let lastGameStartDate = new Date(json['start_time'] * 1000);
 		let lastGameStart = `${get2Numbers(lastGameStartDate.getHours())}:${get2Numbers(lastGameStartDate.getMinutes())} ` +
-		`${get2Numbers(lastGameStartDate.getDay())}.${get2Numbers(lastGameStartDate.getMonth())}.` +
+		`${get2Numbers(lastGameStartDate.getDate())}.${get2Numbers(lastGameStartDate.getMonth() + 1)}.` +
 		`${lastGameStartDate.getFullYear()}`;
 			
-		myStatusBarItem.text = 'Last Dota 2 game time: ' + lastGameStart;
+		myStatusBarItem.text = 'Last Dota 2 Game Time: ' + lastGameStart;
 		myStatusBarItem.show();
 	}
 	catch {

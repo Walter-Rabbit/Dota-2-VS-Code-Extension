@@ -12,6 +12,10 @@ You may see date and time of last game in status bar. Also, you can see informat
 
 ## Realeses Notes
 
+### 1.1.4
+
+* Local time instead of UTC.
+
 ### 1.1.3
 
 * Fix bug when new user can not set dota ID.
